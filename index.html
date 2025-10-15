@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paras Gupta - 3D Artist Portfolio</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+            color: #F9FAFB; /* text-gray-50 */
+        }
+        /* Style for active navigation link */
+        .nav-link.active {
+            color: #3B82F6; /* text-blue-500 */
+            border-bottom: 2px solid #3B82F6;
+        }
+        /* Smooth transition for page sections */
+        .page-section {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Style for the currently visible page */
+        .page-section.visible {
+            display: block;
+        }
+        /* Custom scrollbar for a modern look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1F2937; }
+        ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6B7280; }
+
+        /* --- Lightbox Styles --- */
+        .lightbox-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease-in-out; }
+        .lightbox-modal.visible { display: flex; opacity: 1; }
+        .lightbox-content { max-width: 90vw; max-height: 90vh; animation: zoomIn 0.3s ease-in-out; }
+        @keyframes zoomIn { from { transform: scale(0.8); } to { transform: scale(1); } }
+        .lightbox-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; transition: color 0.2s; }
+        .lightbox-close:hover { color: #bbb; }
+
+        /* --- Glowing Outline Effect --- */
+        .lightbox-trigger { transition: all 0.3s ease-in-out; }
+        .lightbox-trigger:hover { box-shadow: 0 0 20px 3px rgba(59, 130, 246, 0.6); }
+
+        /* --- Thank You Page Styles --- */
+        .thank-you-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .thank-you-card {
+            background-color: #1F2937;
+            border: 1px solid #374151;
+            border-radius: 1rem;
+            padding: 3rem 4rem;
+            text-align: center;
+            transform: scale(0.9);
+        }
+        .checkmark-circle { stroke-dasharray: 264; stroke-dashoffset: 264; }
+        .checkmark-check { stroke-dasharray: 48; stroke-dashoffset: 48; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="main-content">
+        <!-- Header and Navigation -->
+        <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-700">
+            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold text-white">Paras Gupta</a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#visualization" class="nav-link text-gray-300 hover:text-blue-500 transition-colors duration-300 pb-1" data-page="visualization">Poster Visualization</a>
+                    <a href="#about" class="nav-link text-gray-300 hover:text-blue-500 transition-colors duration-300 pb-1" data-page="about">About & Contact</a>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                </button>
+            </nav>
+            <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
+                <a href="#visualization" class="block nav-link text-gray-300 hover:text-blue-500 transition-colors duration-300 py-2" data-page="visualization">Poster Visualization</a>
+                <a href="#about" class="block nav-link text-gray-300 hover:text-blue-500 transition-colors duration-300 py-2" data-page="about">About & Contact</a>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-6 py-12">
+            <!-- Poster Visualization Section -->
+            <section id="visualization" class="page-section">
+                <h1 class="text-4xl font-bold mb-8 text-center">Poster Visualization</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project Cards -->
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"><img src="https://live.staticflickr.com/65535/54856765956_ec4ee5b10a_b.jpg" alt="DAS PARFUM POSTER" class="w-full h-64 object-cover"><div class="p-4"><h3 class="font-semibold text-lg">DAS PARFUM POSTER</h3><p class="text-gray-400 text-sm">A brand poster of Das Parfum.</p></div></div>
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"><img src="https://live.staticflickr.com/65535/54856769541_eb3fb15a52_b.jpg" alt="BRANDED EARPHONES POSTER" class="w-full h-64 object-cover"><div class="p-4"><h3 class="font-semibold text-lg">BRANDED EARPHONES POSTER</h3><p class="text-gray-400 text-sm">A masterpiece for audiophiles.</p></div></div>
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"><img src="https://live.staticflickr.com/65535/54855907417_033d8d811b_b.jpg" alt="RESTAURANT POSTER" class="w-full h-64 object-cover"><div class="p-4"><h3 class="font-semibold text-lg">RESTAURANT POSTER</h3><p class="text-gray-400 text-sm">A poster for newly open Gaurav Restautant.</p></div></div>
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"><img src="https://live.staticflickr.com/65535/54856767226_c488cf8aa4_b.jpg" alt="RESTAURANT POSTER" class="w-full h-64 object-cover"><div class="p-4"><h3 class="font-semibold text-lg">RESTAURANT POSTER POSTER</h3><p class="text-gray-400 text-sm">Poster for free burger for completing 1 year.</p></div></div>
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"><img src="https://live.staticflickr.com/65535/54857020434_41d249ac8d_b.jpg" alt="SUPER CAR POSTER" class="w-full h-64 object-cover"><div class="p-4"><h3 class="font-semibold text-lg">SUPER CAR POSTER</h3><p class="text-gray-400 text-sm">A high quality ready to print wall poster.</p></div></div>
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer"><img src="https://live.staticflickr.com/65535/54856773296_d65e54cc6e_b.jpg" alt="SUPER CAR POSTER" class="w-full h-64 object-cover"><div class="p-4"><h3 class="font-semibold text-lg">SUPER CAR POSTER</h3><p class="text-gray-400 text-sm">A wall poster of curse eye super car BMW.</p></div></div>
+
+
+
+                </div>
+            </section>
+
+            <!-- About & Contact Section -->
+            <section id="about" class="page-section">
+                <h1 class="text-4xl font-bold mb-8 text-center">About Me & Contact</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-4"><img src="https://live.staticflickr.com/65535/54738978429_0cdf523bab_b.jpg" alt="Paras Gupta" class="w-48 h-48 rounded-full mx-auto md:mx-0 object-cover shadow-lg mb-6"><h2 class="text-3xl font-semibold">Hi, I'm Paras Gupta</h2><p class="text-gray-300 leading-relaxed">Graphic Designer & Visual Strategist ✨ | Turning ideas into impactful design. ✨</p><p class="text-gray-300 leading-relaxed">My tools of choice are the Adobe Creative Suite and Canva, and I specialize in creating clean, compelling visuals that solve problems and elevate brands. I'm giving you a high lossless quality 4K UHD poster which is ready to print or post on social media.</p><p class="text-gray-300 leading-relaxed font-semibold">Let's create something amazing together!</p></div>
+                    <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
+                        <form id="contactForm">
+                            <div class="mb-5"><label for="name" class="block mb-2 text-sm font-medium text-gray-300">Your Name</label><input type="text" id="name" name="name" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="John Doe" required></div>
+                            <div class="mb-5"><label for="email" class="block mb-2 text-sm font-medium text-gray-300">Your Email</label><input type="email" id="email" name="email" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@example.com" required></div>
+                            <div class="mb-5"><label for="message" class="block mb-2 text-sm font-medium text-gray-300">Your Message</label><textarea id="message" name="message" rows="4" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Tell me about your project..." required></textarea></div>
+                            <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center transition-colors duration-300">Send Message</button>
+                        </form>
+                        <div class="my-4 flex items-center"><div class="flex-grow border-t border-gray-600"></div><span class="flex-shrink mx-4 text-gray-500">OR</span><div class="flex-grow border-t border-gray-600"></div></div>
+                        <a href="https://wa.me/919752703674" target="_blank" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 px-5 rounded-lg transition-colors flex items-center justify-center text-sm">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.04 2.01A10.03 10.03 0 0 0 2 12.05c0 5.52 4.48 10 10 10 1.73 0 3.36-.44 4.78-1.22l2.72 1.22-1.22-2.72A9.93 9.93 0 0 0 22.05 12c0-5.52-4.48-10-10-10h-.01ZM17.5 14.3c-.28-.14-1.62-.8-1.87-.89-.25-.09-.43-.14-.61.14-.18.28-.71.89-.87 1.07-.16.18-.32.2-.6.06-.28-.14-1.17-.43-2.23-1.37A9.74 9.74 0 0 1 9.4 9.77c-.12-.2-.02-.31.12-.43.13-.12.28-.31.42-.47.14-.16.18-.28.28-.47.09-.18 0-.36-.05-.5-.05-.14-.61-1.47-.83-2.01-.22-.54-.45-.47-.61-.47-.16 0-.34-.05-.53-.05-.18 0-.47.07-.71.35-.24.28-.93.9-1.15 2.2-.22 1.3.65 2.95.74 3.13.09.18 1.47 2.26 3.58 3.18.5.22.9.36 1.2.46.47.16.89.13 1.22.08.38-.06 1.22-.5 1.4-1 .18-.5.18-.92.13-1.02-.05-.1-.18-.14-.47-.28Z"/></svg>
+                            Chat on WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 border-t border-gray-700 mt-16">
+            <div class="container mx-auto px-6 py-6 text-center text-gray-400">
+                 <p>&copy; 2024 Paras Gupta. All Rights Reserved.</p>
+                 <div class="flex justify-center space-x-4 mt-4"><a href="#" class="hover:text-blue-500 transition-colors">ArtStation</a><a href="http://www.linkedin.com/in/parasgupta-ee" target="_blank" class="hover:text-blue-500 transition-colors">LinkedIn</a><a href="https://www.instagram.com/parasgupta_19/" target="_blank" class="hover:text-blue-500 transition-colors">Instagram</a><a href="https://wa.me/919752703674" target="_blank" class="hover:text-green-500 transition-colors">WhatsApp</a></div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Thank You Page (Initially Hidden) -->
+    <div id="thankYouPage" class="thank-you-overlay hidden">
+        <div id="thankYouCard" class="thank-you-card shadow-2xl">
+            <svg class="w-24 h-24 mx-auto mb-6" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><circle id="checkmarkCircle" class="checkmark-circle" cx="44" cy="44" r="41.5" stroke="#3B82F6" stroke-width="5"/><polyline id="checkmarkCheck" class="checkmark-check" stroke="#3B82F6" stroke-width="5" points="25 44 39 58 63 34" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+            <h1 id="thankYouTitle" class="text-4xl font-bold text-white mb-3">Message Sent!</h1>
+            <p id="thankYouText" class="text-gray-400 mb-8">Thank you for reaching out. I'll get back to you as soon as possible.</p>
+            <button id="backButton" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-300">Back to Portfolio</button>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox-modal">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-image">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Page Navigation Logic ---
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageSections = document.querySelectorAll('.page-section');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            function showPage(pageId) {
+                pageSections.forEach(section => section.classList.remove('visible'));
+                const targetSection = document.getElementById(pageId);
+                if (targetSection) targetSection.classList.add('visible');
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.dataset.page === pageId);
+                });
+                mobileMenu.classList.add('hidden');
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.dataset.page;
+                    showPage(pageId);
+                    history.pushState(null, null, `#${pageId}`);
+                });
+            });
+
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+            const initialPage = window.location.hash.substring(1) || 'visualization';
+            showPage(initialPage);
+
+            // --- Lightbox Logic ---
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxTriggers = document.querySelectorAll('.lightbox-trigger');
+            const lightboxClose = document.querySelector('.lightbox-close');
+
+            lightboxTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function() {
+                    const img = this.querySelector('img');
+                    const fullSrc = img.getAttribute('data-full-src') || img.src;
+                    lightboxImage.src = fullSrc;
+                    lightbox.classList.add('visible');
+                });
+            });
+
+            function closeLightbox() { lightbox.classList.remove('visible'); }
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+            // --- Contact Form & Thank You Page Logic ---
+            const contactForm = document.getElementById('contactForm');
+            const mainContent = document.getElementById('main-content');
+            const thankYouPage = document.getElementById('thankYouPage');
+            const backButton = document.getElementById('backButton');
+
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                // This is the AJAX request to FormSubmit
+                fetch("https://formsubmit.co/ajax/paras19.contact@gmail.com", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // You can see the success message in the console
+                    showThankYouPage(); // Show the animated thank you page
+                    contactForm.reset();
+                })
+                .catch(error => console.error(error));
+            });
+
+            function showThankYouPage() {
+                gsap.to(mainContent, { opacity: 0, duration: 0.5, onComplete: () => {
+                    mainContent.classList.add('hidden');
+                    thankYouPage.classList.remove('hidden');
+                    
+                    const tl = gsap.timeline();
+                    tl.to("#thankYouCard", { opacity: 1, scale: 1, duration: 0.8, ease: "elastic.out(1, 0.75)" });
+                    tl.to("#checkmarkCircle", { strokeDashoffset: 0, duration: 1, ease: "power2.inOut" }, "-=0.5");
+                    tl.to("#checkmarkCheck", { strokeDashoffset: 0, duration: 0.5, ease: "power2.out" });
+                    tl.from("#thankYouTitle", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, "-=0.2");
+                    tl.from("#thankYouText", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, "-=0.3");
+                    tl.from("#backButton", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, "-=0.3");
+                }});
+            }
+
+            backButton.addEventListener('click', function() {
+                gsap.to(thankYouPage, { opacity: 0, duration: 0.5, onComplete: () => {
+                    thankYouPage.classList.add('hidden');
+                    mainContent.classList.remove('hidden');
+                    gsap.to(mainContent, { opacity: 1, duration: 0.5 });
+                }});
+            });
+        });
+    </script>
+</body>
+</html>
