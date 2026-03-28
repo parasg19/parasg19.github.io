@@ -223,10 +223,61 @@
                 <h1 class="text-4xl font-bold mb-8 text-center">3D Animation</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                   <!-- Animation Project 1 - UPDATED -->
-                      
-                    <!-- Placeholder Animation 2 - FIXED -->
-                            
+                    <!-- Animation Video 1 -->
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer">
+                        <video style="width: 100%; height: 256px; object-fit: cover;" autoplay muted loop playsinline>
+                            <source src="https://raw.githubusercontent.com/parasg19/parasg19.github.io/main/Shure%20-mic.mp4" type="video/mp4">
+                        </video>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">SHURE - Recording Mic</h3>
+                            <p class="text-gray-400 text-sm">Professional Recording Mic For Professionals</p>
+                        </div>
+                    </div>
+
+                    <!-- Animation Video 2 -->
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer">
+                        <video style="width: 100%; height: 256px; object-fit: cover;" autoplay muted loop playsinline>
+                            <source src="https://raw.githubusercontent.com/parasg19/parasg19.github.io/main/timex%20watch.mp4" type="video/mp4">
+                        </video>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">TIMEX - Analog Watch</h3>
+                            <p class="text-gray-400 text-sm">Multifunction Watch by Timex</p>
+                        </div>
+                    </div>
+
+                    <!-- Animation Video 3 -->
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer">
+                        <video style="width: 100%; height: 256px; object-fit: cover;" autoplay muted loop playsinline>
+                            <source src="https://raw.githubusercontent.com/parasg19/parasg19.github.io/main/2%20VIDEO.mp4" type="video/mp4">
+                        </video>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">VARA - By Luxuria</h3>
+                            <p class="text-gray-400 text-sm">Ancient Indian Traditions Perfume Brand</p>
+                        </div>
+                    </div>
+
+                    <!-- Animation Video 4 -->
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer">
+                        <video style="width: 100%; height: 256px; object-fit: cover;" autoplay muted loop playsinline>
+                            <source src="https://raw.githubusercontent.com/parasg19/parasg19.github.io/main/neo%201.mp4" type="video/mp4">
+                        </video>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">Neo1 - By Neosapien</h3>
+                            <p class="text-gray-400 text-sm">India's First AI Pendant</p>
+                        </div>
+                    </div>
+
+                    <!-- Animation Video 5 -->
+                    <div class="lightbox-trigger bg-gray-800 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer">
+                        <video style="width: 100%; height: 256px; object-fit: cover;" autoplay muted loop playsinline>
+                            <source src="https://raw.githubusercontent.com/parasg19/parasg19.github.io/main/xp-pen.mp4" type="video/mp4">
+                        </video>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">XP-PEN - Deco Fun Extra Large</h3>
+                            <p class="text-gray-400 text-sm">Professional grade graphic Tablet</p>
+                        </div>
+                    </div>
+
                 </div> 
             </section>
 
@@ -274,7 +325,7 @@
         </div>
     </div>
 
-    <!-- Lightbox Modal -->
+        <!-- Lightbox Modal -->
     <div id="lightbox" class="lightbox-modal">
         <span class="lightbox-close">&times;</span>
         <img class="lightbox-content" id="lightbox-image">
@@ -326,19 +377,34 @@
             lightboxTriggers.forEach(trigger => {
                 trigger.addEventListener('click', function() {
                     const img = this.querySelector('img');
-                    // UPDATED: Check if an image exists before trying to open lightbox
-                    if (!img) return; 
+                    const video = this.querySelector('video');
                     
-                    const fullSrc = img.getAttribute('data-full-src') || img.src;
-                    lightboxImage.src = fullSrc;
-                    lightbox.classList.add('visible');
+                    // UPDATED: Handle both images and videos
+                    if (img) {
+                        const fullSrc = img.getAttribute('data-full-src') || img.src;
+                        lightboxImage.src = fullSrc;
+                        lightboxImage.style.display = 'block';
+                        lightbox.classList.add('visible');
+                    } else if (video) {
+                        // Clone video element for fullscreen display
+                        const videoClone = video.cloneNode(true);
+                        videoClone.style.maxWidth = '90vw';
+                        videoClone.style.maxHeight = '90vh';
+                        videoClone.controls = true;
+                        videoClone.autoplay = true;
+                        
+                        lightboxImage.style.display = 'none';
+                        lightbox.innerHTML = '<span class="lightbox-close">&times;</span>';
+                        lightbox.appendChild(videoClone);
+                        lightbox.classList.add('visible');
+                    }
                 });
             });
 
             function closeLightbox() { lightbox.classList.remove('visible'); }
             lightboxClose.addEventListener('click', closeLightbox);
             lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-
+            
             // --- Contact Form & Thank You Page Logic ---
             const contactForm = document.getElementById('contactForm');
             const mainContent = document.getElementById('main-content');
