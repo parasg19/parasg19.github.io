@@ -325,10 +325,11 @@
         </div>
     </div>
 
-        <!-- Lightbox Modal -->
+         <!-- Lightbox Modal -->
     <div id="lightbox" class="lightbox-modal">
         <span class="lightbox-close">&times;</span>
-        <img class="lightbox-content" id="lightbox-image">
+        <img class="lightbox-content" id="lightbox-image" style="display: none;">
+        <video id="lightbox-video" class="lightbox-content" controls style="display: none; max-width: 90vw; max-height: 90vh;"></video>
     </div>
 
     <script>
@@ -360,17 +361,16 @@
 
             mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-            // Set initial page based on URL hash
             let initialPage = window.location.hash.substring(1);
             if (!document.getElementById(initialPage)) {
-                initialPage = 'visualization'; // Default to visualization if hash is invalid
+                initialPage = 'visualization';
             }
             showPage(initialPage);
-
 
             // --- Lightbox Logic ---
             const lightbox = document.getElementById('lightbox');
             const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxVideo = document.getElementById('lightbox-video');
             const lightboxTriggers = document.querySelectorAll('.lightbox-trigger');
             const lightboxClose = document.querySelector('.lightbox-close');
 
@@ -379,31 +379,41 @@
                     const img = this.querySelector('img');
                     const video = this.querySelector('video');
                     
-                    // UPDATED: Handle both images and videos
                     if (img) {
-                        const fullSrc = img.getAttribute('data-full-src') || img.src;
-                        lightboxImage.src = fullSrc;
+                        // Show image
+                        lightboxImage.src = img.src;
                         lightboxImage.style.display = 'block';
+                        lightboxVideo.style.display = 'none';
                         lightbox.classList.add('visible');
                     } else if (video) {
-                        // Clone video element for fullscreen display
-                        const videoClone = video.cloneNode(true);
-                        videoClone.style.maxWidth = '90vw';
-                        videoClone.style.maxHeight = '90vh';
-                        videoClone.controls = true;
-                        videoClone.autoplay = true;
-                        
-                        lightboxImage.style.display = 'none';
-                        lightbox.innerHTML = '<span class="lightbox-close">&times;</span>';
-                        lightbox.appendChild(videoClone);
-                        lightbox.classList.add('visible');
+                        // Show video
+                        const videoSource = video.querySelector('source');
+                        if (videoSource) {
+                            lightboxImage.style.display = 'none';
+                            lightboxVideo.src = videoSource.src;
+                            lightboxVideo.style.display = 'block';
+                            lightboxVideo.controls = true;
+                            lightboxVideo.autoplay = true;
+                            lightboxVideo.muted = false;
+                            lightbox.classList.add('visible');
+                        }
                     }
                 });
             });
 
-            function closeLightbox() { lightbox.classList.remove('visible'); }
+            function closeLightbox() {
+                lightbox.classList.remove('visible');
+                lightboxVideo.pause();
+                lightboxVideo.src = '';
+                lightboxImage.style.display = 'none';
+            }
+
             lightboxClose.addEventListener('click', closeLightbox);
-            lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
             
             // --- Contact Form & Thank You Page Logic ---
             const contactForm = document.getElementById('contactForm');
@@ -415,15 +425,14 @@
                 e.preventDefault();
                 const formData = new FormData(this);
                 
-                // This is the AJAX request to FormSubmit
                 fetch("https://formsubmit.co/ajax/paras19.contact@gmail.com", {
                     method: "POST",
                     body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data); // You can see the success message in the console
-                    showThankYouPage(); // Show the animated thank you page
+                    console.log(data);
+                    showThankYouPage();
                     contactForm.reset();
                 })
                 .catch(error => console.error(error));
@@ -452,11 +461,4 @@
                 }});
             });
         });
-    </script>
-</body>
-</html>
-
-
-
-
-
+    </script>   
